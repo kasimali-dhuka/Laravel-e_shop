@@ -48,7 +48,7 @@
                     <li class="nav-item">
                         <a href="{{ route('cart.index') }}" class="nav-link position-relative">
                             <span class="material-icons-round">shopping_cart</span>
-                            {{-- <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">99+</span> --}}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ $cart_count }}</span>
                         </a>
                     </li>
                 @endguest
