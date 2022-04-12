@@ -9,7 +9,7 @@
 
 ## About Laravel E-Shop project
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Laravel E-Shop project is a e-commerce web application. With multi auth and API system:
 
 - [Simple, fast routing engine with 2 routing middleware].
 - [Seprate middleware for authenticated user and Admin].
