@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Resources\Product as ProductResource;
 
 class FrontendController extends Controller
 {
@@ -40,5 +41,15 @@ class FrontendController extends Controller
             $category = Category::where('status', 0)->get();
             return view('frontend.category', ['category' => $category]);
         }
+    }
+    
+    /**
+     * Get Product->with('category') resource from api by calling /product 
+     * @return data array
+     */
+
+    public function product()
+    {
+        return ProductResource::collection(Product::all());
     }
 }

@@ -22,6 +22,15 @@ class Category extends Model
         'meta_keywords'
     ];
 
+    protected $hidden = [
+        'slug',
+        'meta_title',
+        'meta_keywords',
+        'meta_description',
+        'created_at',
+        'updated_at'
+    ];
+
     public function product() 
     {
         return $this->hasMany(Product::class);
