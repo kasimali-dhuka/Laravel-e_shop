@@ -77,7 +77,14 @@
                     <h4>Description</h4>
                     <p>{{ $product->description }}</p>
                 </div>
-                
+                <hr />
+                <div class="price-wrapper">
+                    <div class="price">
+                        <h5 class="text-end">
+                            Total Price : ₹ <span class="cart-price" data-price="{{ $product->selling_price }}">{{ $product->selling_price }}</span> /-
+                        </h5>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -24,14 +24,18 @@ $(document).ready(function () {
         let input = $(this).closest('.product-quantity').find('input#quantity');
         let limit = input.data('limit');
         let currentValue = isNaN(parseInt(input.val(), 10)) ? 0 : parseInt(input.val(), 10);
-
+        let priceContainer = $('.cart-price')
+        let price = priceContainer.data('price');
+        // console.log(currentValue);
         if (action === 'inc') {
             if (currentValue < limit) {
-                input.val(currentValue+1);
+                input.val(++currentValue);
+                priceContainer.html(currentValue*price);
             }
         } else if (action === 'dec') {
             if (currentValue > 1) {
-                input.val(currentValue-1);
+                input.val(--currentValue);
+                priceContainer.html(currentValue*price);
             }
         }
 
@@ -42,6 +46,7 @@ $(document).ready(function () {
         
         let prod_id = $(this).closest('.product-quantity').find('.prod_id').val();
         let prod_qty = $(this).closest('.product-quantity').find('.prod_qty').val();
+        let cartCount = $('.cart-count-container').text();
 
         $.ajax({
             type: "POST",
@@ -58,6 +63,7 @@ $(document).ready(function () {
                         `${response.product_name} was added to the cart.`,
                         'success'
                     )
+                    $('.cart-count-container').text(++cartCount);
                 }
                 if (response.status === 'warning') {
                     swalWithBootstrapButtons.fire(
