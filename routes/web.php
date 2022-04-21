@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\FrontendController as FrontendFrontendController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * Frontend Controllers routes
+ */
 
 Route::controller(FrontendFrontendController::class)->name('frontend.')->group(function() {
     Route::get('/', 'index')->name('index');
@@ -28,11 +32,13 @@ Route::controller(FrontendFrontendController::class)->name('frontend.')->group(f
 });
 
 /**
- * Cart Controllers Routes
+ * Cart and Checkout Controller Routes
  */
 Route::middleware(['auth'])->group(function() {
     Route::resource('/cart', CartController::class);
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 });
+
 
 Auth::routes();
 

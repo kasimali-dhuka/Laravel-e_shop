@@ -11,7 +11,6 @@
     @php
         $original_price = 0;
         $price = 0;
-        $discount = 0;
         $counter = 0;
     @endphp
     <div class="container">
@@ -22,7 +21,6 @@
                         $counter++;
                         $original_price += $item->product->original_price * $item->prod_qty;
                         $price += $item->product->selling_price * $item->prod_qty;
-                        $discount += $item->product->original_price - $item->product->selling_price;
                     @endphp
                     <div class="row my-3 py-3 item-cart">
                         <div class="col-md-2 text-center">
@@ -47,22 +45,33 @@
                             </P>
                         </div>
                         <div class="col-md-3 text-center product-quantity">
-                            <label for="Quantity" class="mb-1">Quantity</label>
-                            <input type="hidden" value="{{ $item->prod_id }}" class="prod_id">
-                            <div class="input-group text-center mb-3 m-auto" style="width:110px;">
-                                <button class="input-group-text qty-btn" data-action="dec"> - </button>
-                                <input 
-                                    type="text" 
-                                    name="quantity" 
-                                    id="quantity" 
-                                    value="{{ $item->prod_qty }}" 
-                                    max="{{ $item->product->qty }}" 
-                                    class="form-control shadow-none bg-light text-center prod_qty" 
-                                    data-limit="{{ $item->product->qty }}"
-                                    readonly
-                                />
-                                <button class="input-group-text qty-btn" data-action="inc"> + </button>
-                            </div>
+                            @if ($item->product->qty >= $item->prod_qty )
+                                <label for="Quantity" class="mb-1">Quantity</label>
+                                <input type="hidden" value="{{ $item->prod_id }}" class="prod_id">
+                                <div class="input-group text-center mb-3 m-auto" style="width:110px;">
+                                    <button class="input-group-text qty-btn" data-action="dec"> - </button>
+                                    <input 
+                                        type="text" 
+                                        name="quantity" 
+                                        id="quantity" 
+                                        value="{{ $item->prod_qty }}" 
+                                        max="{{ $item->product->qty }}" 
+                                        class="form-control shadow-none bg-light text-center prod_qty" 
+                                        data-limit="{{ $item->product->qty }}"
+                                        data-itemid="{{ $item->id }}"
+                                        readonly
+                                    />
+                                    <button class="input-group-text qty-btn" data-action="inc"> + </button>
+                                </div>
+                            @else
+                                <div class="d-flex justify-content-center h-100 align-items-center">
+                                    <h4 class="fw-bold fs-5">⚠ Out of Stock ⚠</h4>
+                                </div>
+                                @php
+                                    $original_price -= $item->product->original_price * $item->prod_qty;
+                                    $price -= $item->product->selling_price * $item->prod_qty;
+                                @endphp
+                            @endif
                         </div>
                         <div class="col-md-2 align-self-center">
                             <button class="btn btn-danger deleteCartProduct" data-id="{{ $item-> id }}">
@@ -85,11 +94,11 @@
                     <div class="price-details border-bottom" style="border-bottom-style:dashed!important;">
                         <div class="list d-flex justify-content-between mb-3 me-2">
                             <p class="m-0">Price ({{ $counter }} items)</p>
-                            <span class="fw-bold">₹{{ $original_price }} </span>
+                            <span class="fw-bold"> ₹<span class="cart-original-price">{{ $original_price }}</span> </span>
                         </div>
                         <div class="list d-flex justify-content-between mb-3 me-2">
                             <p class="m-0">Discount</p>
-                            <span class="text-success"> - ₹{{ $discount }} </span>
+                            <span class="text-success"> - ₹<span class="cart-discount">{{ $original_price-$price }}</span> </span>
                         </div>
                         <div class="list d-flex justify-content-between mb-3 me-2">
                             <p class="m-0">Delivery</p>
@@ -99,7 +108,7 @@
                     <div class="price-details border-bottom" style="border-bottom-style:dashed!important;">
                         <div class="list d-flex justify-content-between my-3 me-2">
                             <p class="m-0 fw-bold fs-5">Total Amount</p>
-                            <span class="fs-5 fw-bold"> ₹{{ $price }} </span>
+                            <span class="fs-5 fw-bold"> ₹<span class="cart-total-price">{{ $price }}</span>/- </span>
                         </div>
                     </div>
                     <div class="note mt-3">
@@ -107,6 +116,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="checkout-btn-container mt-3 text-end">
+            <a href="{{ route('checkout.index') }}" class="btn btn-lg btn-primary checkout-btn">Checkout</a>
         </div>
     </div>
 @endsection

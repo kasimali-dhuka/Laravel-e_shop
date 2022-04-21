@@ -22,6 +22,7 @@ $(document).ready(function () {
         e.preventDefault();
         let action = $(this).data('action');
         let input = $(this).closest('.product-quantity').find('input#quantity');
+        let cartId = input.data('itemid') ? input.data('itemid') : null;
         let limit = input.data('limit');
         let currentValue = isNaN(parseInt(input.val(), 10)) ? 0 : parseInt(input.val(), 10);
         let priceContainer = $('.cart-price')
@@ -31,15 +32,63 @@ $(document).ready(function () {
             if (currentValue < limit) {
                 input.val(++currentValue);
                 priceContainer.html(currentValue*price);
+                if (cartId) {
+                    updateCartQty(cartId, currentValue, true)
+                }
             }
         } else if (action === 'dec') {
             if (currentValue > 1) {
                 input.val(--currentValue);
                 priceContainer.html(currentValue*price);
+                if (cartId) {
+                    updateCartQty(cartId, currentValue, false)
+                }
             }
         }
-
     });
+
+    function updateCartQty(cart_id, prod_qty, inc) {
+        let cartOriginalPrice = parseInt($('.cart-original-price').text());
+        let cartDiscount = parseInt($('.cart-discount').text());
+        let cartTotalPrice = parseInt($('.cart-total-price').text());
+        $.ajax({
+            type: "PUT",
+            url: `/cart/${cart_id}`,
+            data: {
+                '_token' : $("meta[name='csrf-token']").attr("content"),
+                'prod_qty': prod_qty
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    let originalPrice = parseInt(response.original_price);
+                    let sellingPrice = parseInt(response.selling_price);
+                    
+                    if (inc) {
+                        cartOriginalPrice += originalPrice;
+                        cartTotalPrice += sellingPrice
+                        $('.cart-original-price').text(cartOriginalPrice);
+                        $('.cart-total-price').text(cartTotalPrice);
+                        $('.cart-discount').text(cartOriginalPrice - cartTotalPrice);
+                    } else {
+                        cartOriginalPrice -= originalPrice;
+                        cartTotalPrice -= sellingPrice
+                        $('.cart-original-price').text(cartOriginalPrice);
+                        $('.cart-total-price').text(cartTotalPrice);
+                        $('.cart-discount').text(cartOriginalPrice - cartTotalPrice);
+                    }
+
+                }
+            },
+            error: function (response) {
+                swalWithBootstrapButtons.fire(
+                    'Oops!',
+                    `Something went wrong !.`,
+                    'error'
+                );
+                windows.location.reload();
+            }
+        });
+    }
 
     $('.addToCartBtn').click(function (e) { 
         e.preventDefault();

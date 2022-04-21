@@ -98,7 +98,14 @@ class CartController extends Controller
      */
     public function update(Request $request, Cart $cart)
     {
-        //
+        $cart->prod_qty = $request->input('prod_qty');
+        $cart->save();
+
+        return response()->json([
+            'status' => 'success',
+            'original_price' => $cart->product->original_price,
+            'selling_price' => $cart->product->selling_price,
+        ]);
     }
 
     /**

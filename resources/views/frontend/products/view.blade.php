@@ -49,7 +49,7 @@
                                         type="text" 
                                         name="quantity" 
                                         id="quantity" 
-                                        value="1" 
+                                        value="{{ $product->qty > 0 ? '1':'0' }}" 
                                         max="{{ $product->qty }}" 
                                         class="form-control shadow-none bg-light text-center prod_qty" 
                                         data-limit="{{ $product->qty }}"
@@ -64,10 +64,12 @@
                                     Add to Wishlist
                                     <i class="ms-1  fas fa-heart"></i>
                                 </button>
-                                <button class="btn btn-primary me-3 float-start addToCartBtn">
-                                    Add to Cart
-                                    <i class="ms-1 fas fa-shopping-cart"></i>
-                                </button>
+                                @if ($product->qty > 0)
+                                    <button class="btn btn-primary me-3 float-start addToCartBtn">
+                                        Add to Cart
+                                        <i class="ms-1 fas fa-shopping-cart"></i>
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>
